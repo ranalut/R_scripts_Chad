@@ -6,9 +6,9 @@ library(raster)
 # season <- 'CBC'
 # folder <- 'test5'
 
-# spp.codes <- c('AMKE','CASP','CCLO','FEHA') # 4, BBS
-# season <- 'BBS'
-# folder <- 'test5'
+spp.codes <- c('AMKE','CASP','CCLO','FEHA') # 4, BBS
+season <- 'BBS'
+folder <- 'test5'
 
 ###############################
 # 10 Species
@@ -28,9 +28,9 @@ library(raster)
 
 ################################
 # 2 Species
-spp.codes <- c('CASP','CCLO') # 3, CBC
-season <- 'BBS'
-folder <- 'test2'
+# spp.codes <- c('CASP','CCLO') # 3, CBC
+# season <- 'BBS'
+# folder <- 'test2'
 
 ################################
 # Multi-species
