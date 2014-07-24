@@ -1,5 +1,5 @@
 # File-generating function
-gen.zig3.files <- function(theData, workspace, season, label, label.spp, temp_dat, append.bat)
+gen.zig3.files <- function(theData, workspace, season, label, label.spp, temp_dat, append.bat, run.zig)
 {
 	theData <- theData[theData$BBL_ABBREV %in% label.spp,]
 	cat(season,' Species',theData$BBL_ABBREV,'\n')
@@ -35,4 +35,11 @@ gen.zig3.files <- function(theData, workspace, season, label, label.spp, temp_da
 	temp_dat[29,1]<-paste("use info-gap weights  = 0", sep="")
 	outname<-paste(workspace, 'run_files/', label, "_settings_none_in_",season,".dat", sep="")
 	write.table(temp_dat, outname, qmethod=c("escape"), quote=F, row.names=F, col.names=F)
+	
+	if (run.zig==TRUE)
+	{
+	shell(paste('zig3.exe -r ',workspace,'run_files/',label,'_settings_opportunity_in_',season,'.dat ',workspace,'run_files/',label,'_',season,'_25.spp ',workspace,'prioritizations/opportunity_',label,'_in_',season,'.txt -1.0 0 0.0 0 --use-threads 4',sep=''))
+	shell(paste('zig3.exe -r ',workspace,'run_files/',label,'_settings_risk_in_',season,'.dat ',workspace,'run_files/',label,'_',season,'_25.spp ',workspace,'prioritizations/risk_',label,'_in_',season,'.txt 1.0 0 0.0 0 --use-threads 4',sep=''))
+	shell(paste('call zig3.exe -r ',workspace,'run_files/',label,'_settings_none_in_',season,'.dat ',workspace,'run_files/',label,'_',season,'_25.spp ',workspace,'prioritizations/none_',label,'_in_',season,'.txt 0 0 0.0 0 --use-threads 4',sep=''))
+	}
 }
