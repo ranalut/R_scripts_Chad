@@ -4,19 +4,7 @@ library(raster)
 # Scripts
 source('gen.zig3.files.r')
 source('build.ensembles.r')
-
-# Adjustable Settings
-spp.file <- "Climate Camp Species Lists - CLIMATE_CAMP_ALL.csv"
-	# 'priority_species_22may14.csv' 
-	# 'test_priority_species_1jul14.csv'
-geography <- 'states' # 'misc' # 'states' # 'flyways'
-prioritize <- 'tx_coastal'
-	# 'fl_coastal' 
-	# 'mn_grasslands'
-	# 'test2'
-	# 'NC_pine_island_priority' # 'NC_pine_island_responsibility' # 'NC_coastal' 
-	# 'Any' # NA # 'Pacific' # 'Central' # 'Mississippi' # 'Atlantic' # 'Any'
-run.zonation <- FALSE
+source('build.season.ensembles.r')
 
 #####################################################################################
 # Standard settings
@@ -26,7 +14,7 @@ workspace <- paste("D:/Climate_Strongholds/analyses_",geography,"/",prioritize,"
 dir.create(paste(workspace,'run_files/',sep=''), recursive=TRUE)
 
 # Priority species
-priority <- read.csv(paste("D:/Climate_Strongholds/analyses_",geography,"/",spp.file,sep=''), stringsAsFactors=FALSE)
+# priority <- read.csv(paste("D:/Climate_Strongholds/analyses_",geography,"/",spp.file,sep=''), stringsAsFactors=FALSE) # Read in using 'multi.spp.strong.r')
 the.rows <- grep('X', priority[,prioritize], ignore.case=TRUE)
 select.spp <- priority$BBL_ABBREV[the.rows]
 cat(prioritize,' priority species: ',select.spp,'\nNumber of Species: ',length(select.spp),'\n')
@@ -76,4 +64,12 @@ for (k in season)
 		metadata=metadata
 		)
 }	
-	
+
+ensemble.seasons.zig3(
+	prioritize=prioritize, 
+	strong=strong, 
+	workspace=workspace,
+	valid.models=all.spp, # CBC then BBS
+	label.spp=select.spp,
+	metadata=metadata
+	)
