@@ -15,8 +15,10 @@ dir.create(paste(workspace,'run_files/',sep=''), recursive=TRUE)
 
 # Priority species
 # priority <- read.csv(paste("D:/Climate_Strongholds/analyses_",geography,"/",spp.file,sep=''), stringsAsFactors=FALSE) # Read in using 'multi.spp.strong.r')
-the.rows <- grep('X', priority[,prioritize], ignore.case=TRUE)
-select.spp <- priority$BBL_ABBREV[the.rows]
+# the.rows <- grep('X', priority[,prioritize], ignore.case=TRUE)
+# select.spp <- priority$BBL_ABBREV[the.rows]
+select.spp <- priority[,prioritize]
+select.spp <- select.spp[select.spp!='']
 cat(prioritize,' priority species: ',select.spp,'\nNumber of Species: ',length(select.spp),'\n')
 sink(paste(workspace, prioritize, '.txt',sep=''))
 	cat(prioritize,' priority species: ',select.spp,'\nNumber of Species: ',length(select.spp),'\n')
@@ -24,8 +26,8 @@ sink()
 # stop('cbw')
 
 # Other inputs
-CBC <- read.csv("D:/Climate_Strongholds/CBC_list_2014_03_07_all_species.csv", stringsAsFactors=FALSE)
-BBS <- read.csv("D:/Climate_Strongholds/BBS_list_2014_03_07_all_species.csv",stringsAsFactors=FALSE)
+CBC <- read.csv("D:/Climate_Strongholds/CBC_list_2014_08_07_all_species.csv", stringsAsFactors=FALSE)
+BBS <- read.csv("D:/Climate_Strongholds/BBS_list_2014_08_07_all_species.csv",stringsAsFactors=FALSE)
 all.spp <- list(CBC=CBC,BBS=BBS)
 strong <- raster('D:/Climate_Strongholds/prioritizations/ensemble_TE_in_BBS_CBC.img')
 
