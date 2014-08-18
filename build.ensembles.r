@@ -1,16 +1,4 @@
 
-# library(raster)
-
-# season <- 'BBS' # 'CBC' # 'BBS'
-# geography <- 'states'
-# prioritize <- 
-# 'NC_pine_island_priority'
-# # 'NC_pine_island_responsibility' 
-# # 'NC_coastal' 
-# # NA # 'Pacific' # 'Central' # 'Mississippi' # 'Atlantic' # 'Any'
-# workspace <- paste("D:/Climate_Strongholds/",geography,"_analyses/",prioritize,"/",sep='')
-# strong <- raster('D:/Climate_Strongholds/prioritizations/ensemble_TE_in_BBS_CBC.img')
-
 ensemble.zig3 <- function(prioritize, season, strong, workspace, valid.models, label.spp, metadata)
 {
 	# Ensemble
@@ -31,17 +19,17 @@ ensemble.zig3 <- function(prioritize, season, strong, workspace, valid.models, l
 	theData <- valid.models[valid.models$BBL_ABBREV %in% label.spp,]
 	season.spp <- theData$BBL_ABBREV
 	cat(season,' Species',season.spp,'\n')
+	season.name <- ifelse(season=='CBC','winter','summer')
 	
 	# Metadata
-	keywords <- ifelse(season=='CBC','winter','summer')
-	keywords <- c(keywords,season,'multi-species prioritization')
+	keywords <- c(season.name,season,'multi-species prioritization')
 	new.metadata <- gsub(pattern='<keyword>placeholder</keyword>', replacement=paste('<keyword>',paste(keywords,collapse=' '),'</keyword>',sep=''), x=metadata)
-	new.metadata <- gsub(pattern='<resTitle>placeholder</resTitle>', replacement=paste('<resTitle>',prioritize,"_ensemble_in_",season,"_trim_95p.img",'</resTitle>',sep=''), x=new.metadata)
+	new.metadata <- gsub(pattern='<resTitle>placeholder</resTitle>', replacement=paste('<resTitle>',prioritize,"_ensemble_in_",season.name,"_trim_95p.img",'</resTitle>',sep=''), x=new.metadata)
 	new.metadata <- gsub(pattern='P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;placeholder; placeholder&lt;/SPAN&gt;&lt;/P&gt;&lt;', replacement=paste('P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;',paste(theData$AOU54_COMMON_NAME,collapse='; '),'&lt;/SPAN&gt;&lt;/P&gt;&lt;',sep=''), x=new.metadata)
 	new.metadata <- gsub(pattern='P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;placeholder&lt;/SPAN&gt;&lt;/P&gt;&lt;', replacement=paste('P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;',ifelse(season=='CBC','Winter; based on Christmas Bird Count (CBC) data.','Summer; based on Breeding Bird Survey (BBS) data.'),'&lt;/SPAN&gt;&lt;/P&gt;&lt;',sep=''), x=new.metadata)
-	writeLines(new.metadata, paste(workspace, prioritize,"_ensemble_in_",season,"_trim_95p.img.xml", sep=""))
+	writeLines(new.metadata, paste(workspace, prioritize,"_ensemble_in_",season.name,"_trim_95p.img.xml", sep=""))
 	
-	stop('exported metadata')
+	# stop('exported metadata')
 	
 	max.template <- ensemble
 	max.template[is.na(max.template)==FALSE] <- 0
@@ -76,5 +64,5 @@ ensemble.zig3 <- function(prioritize, season, strong, workspace, valid.models, l
 	# out[dist_max<=threshold]<-0
 
 	plot(out)
-	writeRaster(out, paste(workspace, prioritize,"_ensemble_in_",season,"_trim_95p.img", sep=""), overwrite=TRUE)
+	writeRaster(out, paste(workspace, prioritize,"_ensemble_in_",season.name,"_trim_95p.img", sep=""), overwrite=TRUE)
 }
