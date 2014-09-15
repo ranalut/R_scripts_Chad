@@ -8,8 +8,8 @@ source('build.season.ensembles.r')
 
 #####################################################################################
 # Standard settings
-season <- c('CBC','BBS') # 'CBC' # 'BBS'
-true.false <- list(CBC=FALSE,BBS=TRUE)
+# season <- c('CBC','BBS') # 'CBC' # 'BBS'
+true.false <- list(CBC=FALSE,BBS=FALSE) # true.false <- list(CBC=FALSE,BBS=TRUE)
 workspace <- paste("D:/Climate_Strongholds/analyses_",geography,"/",prioritize,"/",sep='')
 dir.create(paste(workspace,'run_files/',sep=''), recursive=TRUE)
 
@@ -67,11 +67,18 @@ for (k in season)
 		)
 }	
 
-ensemble.seasons.zig3(
-	prioritize=prioritize, 
-	strong=strong, 
-	workspace=workspace,
-	valid.models=all.spp, # CBC then BBS
-	label.spp=select.spp,
-	metadata=metadata
-	)
+if (ensemble.seasons==TRUE)
+{
+	select.spp.prev <- priority[,previous]
+	select.spp.prev <- select.spp.prev[select.spp.prev!='']
+
+	ensemble.seasons.zig3(
+		season=season,
+		prioritize=list(prioritize,previous), 
+		strong=strong, 
+		workspace=list(workspace,paste("D:/Climate_Strongholds/analyses_",geography,"/",previous,"/",sep='')),
+		valid.models=all.spp, # CBC then BBS
+		label.spp=list(select.spp,select.spp.prev),
+		metadata=metadata
+		)
+}

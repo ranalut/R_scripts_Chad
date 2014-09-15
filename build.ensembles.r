@@ -20,6 +20,7 @@ ensemble.zig3 <- function(prioritize, season, strong, workspace, valid.models, l
 	season.spp <- theData$BBL_ABBREV
 	cat(season,' Species',season.spp,'\n')
 	season.name <- ifelse(season=='CBC','winter','summer')
+	prefix <- sub('_summer','',prioritize); prefix <- sub('_winter','',prefix)
 	
 	# Metadata
 	keywords <- c(season.name,season,'multi-species prioritization')
@@ -27,7 +28,7 @@ ensemble.zig3 <- function(prioritize, season, strong, workspace, valid.models, l
 	new.metadata <- gsub(pattern='<resTitle>placeholder</resTitle>', replacement=paste('<resTitle>',prioritize,"_ensemble_in_",season.name,"_trim_95p.img",'</resTitle>',sep=''), x=new.metadata)
 	new.metadata <- gsub(pattern='P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;placeholder; placeholder&lt;/SPAN&gt;&lt;/P&gt;&lt;', replacement=paste('P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;',paste(theData$AOU54_COMMON_NAME,collapse='; '),'&lt;/SPAN&gt;&lt;/P&gt;&lt;',sep=''), x=new.metadata)
 	new.metadata <- gsub(pattern='P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;placeholder&lt;/SPAN&gt;&lt;/P&gt;&lt;', replacement=paste('P STYLE="margin:0 0 8 0;"&gt;&lt;SPAN&gt;',ifelse(season=='CBC','Winter; based on Christmas Bird Count (CBC) data.','Summer; based on Breeding Bird Survey (BBS) data.'),'&lt;/SPAN&gt;&lt;/P&gt;&lt;',sep=''), x=new.metadata)
-	writeLines(new.metadata, paste(workspace, prioritize,"_ensemble_in_",season.name,"_trim_95p.img.xml", sep=""))
+	writeLines(new.metadata, paste(workspace, prefix,"_ensemble_in_",season.name,"_trim_95p.img.xml", sep=""))
 	
 	# stop('exported metadata')
 	
@@ -64,5 +65,5 @@ ensemble.zig3 <- function(prioritize, season, strong, workspace, valid.models, l
 	# out[dist_max<=threshold]<-0
 
 	plot(out)
-	writeRaster(out, paste(workspace, prioritize,"_ensemble_in_",season.name,"_trim_95p.img", sep=""), overwrite=TRUE)
+	writeRaster(out, paste(workspace, prefix,"_ensemble_in_",season.name,"_trim_95p.img", sep=""), overwrite=TRUE)
 }
