@@ -3,35 +3,44 @@ library(raster)
 load("D:/CBC_Future/prediction2000s.RData")
 load("D:/CBC_Future/prediction2080_CFS2.rdata")
 
-var <- c(1,11)
+var <- c(1,12) # c(1,11)
+adj.var <- c(1,11)
 var.names <- c('mean_ann_temp','mean_ann_precip')
+models <- list('A2_2080_hccpr','A2_2080_ccma','A2_2080_nies','A2_2080_csiro_mk')
 
 pres <- avg1999_2008
-fut80 <- list(A2_2080_hccpr,A2_2080_ccma,A2_2080_nies,A2_2080_csiro_mk)
-# output <- pres
-# pres <- alignExtent(extent(fut80[[1]]),pres)
+# fut80 <- list(A2_2080_hccpr,A2_2080_ccma,A2_2080_nies,A2_2080_csiro_mk)
 
-for (i in 1:length(fut80))
+for (i in 1:length(var))
 {
-	pres.mat <- as.matrix(pres[[1]])
-	future <- fut80[[i]]
-	names(future) <- names(pres)
-	future <- future[[1]]
-	future <- as.matrix(future)
-	
-	temp <- future - pres.mat
-	temp <- temp/10
-	if (i==1) { output <- raster(temp, ext=extent(fut80[[i]])) }
-	else
+	for (j in 1:length(models))
 	{
-		output <- addLayer(output,raster(temp,ext=extent(fut80[[i]])))
+		pres.mat <- as.matrix(pres[[adj.var[i]]])
+		future <- raster(paste('D:/GIS_Data/Climate/CFS/Future/CFS_2080/',models[j],'/bioclims/bio_',var[i],sep=''))
+		projection(future) <- '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
+		future.mat <- as.matrix(future)
+		# stop('cbw')
+
+		temp <- future.mat - pres.mat
+		temp <- temp/10
+		if (j==1) { output <- raster(temp, template=future) }
+		else
+		{
+			output <- addLayer(output,raster(temp,template=future))
+		}
+		# print(output)
 	}
+
+
+mean.output <- calc(output,fun=mean,filename=paste('D:/Climate_Exposure/',var.names[i],'_mean.tif',sep=''), overwrite=TRUE)
+sd.output <- calc(output,fun=sd,filename=paste('D:/Climate_Exposure/',var.names[i],'_sd.tif',sep=''), overwrite=TRUE)
+plot(mean.output)
+plot(sd.output)
+
 }
+stop('cbw')
 
-mean.output <- calc(output,fun=mean,filename=paste('D:/Climate_Exposure/',var.names[1],'_mean.tif',sep=''))
-
-
-
+# mean.2 <- projectRaster(mean.output, to=projectExtent(mean.output,crs='+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0'), method='ngb')
 
 # Our #. Bioclim variables
 # 1. BIO1 = Annual Mean Temperature
