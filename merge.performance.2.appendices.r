@@ -1,9 +1,9 @@
 
-ap_9 <- read.csv('d:/climate_evaluation/langham_appendices_s9_evaluation.csv',header=TRUE)
+ap_9 <- read.csv('d:/climate_evaluation/langham_appendices_s9_evaluation.csv',header=TRUE, stringsAsFactors=FALSE)
 # print(head(ap_9))
 
 # BBS
-bbs_met <- read.csv('d:/climate_evaluation/bbs_evaluation_2000s_model_1980s_1990s_data_tpr_tnr.csv',header=TRUE)
+bbs_met <- read.csv('d:/climate_evaluation/bbs_evaluation_2000s_model_1980s_1990s_data_tpr_tnr.csv',header=TRUE, stringsAsFactors=FALSE)
 bbs_met <- bbs_met[,c(6,17:19)]
 colnames(bbs_met) <- c('Scientific.Name','BBS_TRUE_POSITIVE_RATE','BBS_TRUE_NEGATIVE_RATE','BBS_KAPPA')
 ap_9 <- merge (ap_9, bbs_met, sort=FALSE, all.x=TRUE)
@@ -13,7 +13,7 @@ ap_9$BBS_TRUE_NEGATIVE_RATE[is.na(ap_9$BBS_AUC)==TRUE] <- NA
 ap_9$BBS_KAPPA[is.na(ap_9$BBS_AUC)==TRUE] <- NA
 
 # CBC
-cbc_met <- read.csv('d:/climate_evaluation/cbc_evaluation_2000s_model_1980s_1990s_data_tpr_tnr.csv',header=TRUE)
+cbc_met <- read.csv('d:/climate_evaluation/cbc_evaluation_2000s_model_1980s_1990s_data_tpr_tnr.csv',header=TRUE, stringsAsFactors=FALSE)
 cbc_met <- cbc_met[,c(6,17:19)]
 colnames(cbc_met) <- c('Scientific.Name','CBC_TRUE_POSITIVE_RATE','CBC_TRUE_NEGATIVE_RATE','CBC_KAPPA')
 ap_9 <- merge (ap_9, cbc_met, sort=FALSE, all.x=TRUE)
@@ -41,12 +41,23 @@ write.csv(ap_9,'d:/climate_evaluation/langham_appendices_s9_evaluation_v3.csv')
 # stop('cbw')
 
 # Bring in new Birdlife Metric
-eval_final <- read.csv("d:/climate_evaluation/model assessment both seasons birdlife.csv", header=TRUE)
+eval_final <- read.csv("d:/climate_evaluation/model assessment both seasons birdlife.csv", header=TRUE, stringsAsFactors=FALSE)
 eval_final <- eval_final[,-c(11:13)]
 eval_final[,7:10] <- round(eval_final[,7:10],3)
 # colnames(eval_final)[7] <- 'BBS_DE'; colnames(eval_final)[8] <- 'CBC_DE'
 
 eval_final <- merge(eval_final[,-c(7:8)],ap_9[,-c(2,3,7)],all.x=TRUE,sort=FALSE)
-write.csv(eval_final,'d:/climate_evaluation/model_evaluation_metrics_29oct14.csv')
+
+# Bring in SPECIES_CODES
+stamen_bbs <- read.csv('d:/climate_final/Stamen_Audubon_BBS_data_2014_10_02.csv',header=TRUE,stringsAsFactors=FALSE)
+stamen_cbc <- read.csv('d:/climate_final/Stamen_Audubon_CBC_data_2014_10_02.csv',header=TRUE,stringsAsFactors=FALSE)
+stamen <- rbind(stamen_bbs[,c('BBL_ABBREV','SPECIES_CODE')],stamen_cbc[,c('BBL_ABBREV','SPECIES_CODE')])
+dup.test <- duplicated(stamen)
+stamen <- stamen[dup.test==FALSE,]
+
+eval_final <- merge(eval_final,stamen,all.x=TRUE,sort=FALSE)
+# print(colnames(eval_final)); stop('cbw')
+eval_final <- eval_final[,c(3,2,1,15,4,6,9:11,8,5,12:14,7)]
+write.csv(eval_final,'d:/climate_evaluation/model_evaluation_metrics_7nov14.csv')
 
 
