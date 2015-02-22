@@ -2,9 +2,9 @@
 ensemble.zig3 <- function(prioritize, season, strong, workspace, valid.models, label.spp, metadata)
 {
 	# Ensemble
-	r <- raster(paste(workspace,"prioritizations/risk_",prioritize,"_in_",season,".ABF_EAIG100.rank.asc", sep=""))
-	o <- raster(paste(workspace,"prioritizations/opportunity_",prioritize,"_in_",season,".ABF_EAIG-100.rank.asc", sep=""))
-	n <- raster(paste(workspace,"prioritizations/none_",prioritize,"_in_",season,".ABF_EA.rank.asc", sep=""))
+	r <- raster(paste(workspace,"prioritizations/risk_",prioritize,"_in_",season,".ABF_EAIG100.rank.tif", sep=""))
+	o <- raster(paste(workspace,"prioritizations/opportunity_",prioritize,"_in_",season,".ABF_EAIG-100.rank.tif", sep=""))
+	n <- raster(paste(workspace,"prioritizations/none_",prioritize,"_in_",season,".ABF_EA.rank.tif", sep=""))
 
 	e <- max(r,o,n)
 	e_v <- as.vector(e)
