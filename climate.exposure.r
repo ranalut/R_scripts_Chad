@@ -3,9 +3,13 @@ library(raster)
 load("D:/CBC_Future/prediction2000s.RData")
 load("D:/CBC_Future/prediction2080_CFS2.rdata")
 
-var <- c(1,12) # c(1,11)
-adj.var <- c(1,11)
-var.names <- c('mean_ann_temp','mean_ann_precip')
+var <- c(2,3,5,6,7,8,9,10,11,13,14,16,17,18,19) # c(1,12) # c(1,11)
+# variables 4 and 15 are missing, so we need to adjust.
+adj.var <- c(2,3,4,5,6,7,8,9,10,12,13,14,15,16,17) # c(1,11)
+var.names <- c(
+		'mean_diurnal_temp_range','isothermality','mean_temp_warmest_month','mean_temp_coldest_month','mean_annual_temp_range','mean_temp_wet_quarter','mean_temp_dry_quarter','mean_temp_warm_quarter','mean_teamp_cold_quarter',
+		'precip_wet_month','precip_dry_month','precip_wet_quarter','precip_dry_quarter','precip_warm_quarter','precip_cold_quarter'
+		) # c('mean_ann_temp','mean_ann_precip')
 models <- list('A2_2080_hccpr','A2_2080_ccma','A2_2080_nies','A2_2080_csiro_mk')
 
 pres <- avg1999_2008
