@@ -2,7 +2,8 @@
 # Run multi-species strongholds
 
 # Adjustable Settings
-spp.file <- 'sc_nawca.csv'
+spp.file <- 'Audubon WA shrub-steppe.csv'
+	# 'sc_nawca.csv'
 	# 'PacificFlyway_20141212_summer.csv'
 	# '314_sotb_hab_v1.csv' # '542_sotb_hab_v1.csv'# '542_hab_v1.csv' # '314_hab_v1.csv'
 	# 'mn_dnr_22jan15.csv' # 'mn_dnr_5jan15.csv' # 'mn_audubon_and_dnr_all_2.csv' # 'mn_audubon_and_dnr_tpr50_2.csv' # 'mn_audubon_and_dnr_all.csv' # 'mn_dnr_priority_spp.csv' # 'mn_multispecies_no_grasslands.csv'
